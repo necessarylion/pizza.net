@@ -1,8 +1,20 @@
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.EntityFrameworkCore;
+using pizza.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Add DbContext with MySQL
+builder.Services.AddDbContext<AppDbContext>(options => {
+  options.UseMySql(
+      builder.Configuration.GetConnectionString("MysqlConnection"),
+      ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MysqlConnection"))
+  );
+}
+);
 
 // Add services to the container.
 
