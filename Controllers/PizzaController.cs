@@ -11,20 +11,21 @@ public class PizzasController(AppDbContext db) : ControllerBase {
   private readonly AppDbContext _db = db;
 
   [HttpGet]
-  public async Task<List<Pizza>> Listing() {
+  public async Task<ActionResult<List<Pizza>>> Listing() {
     var pizzas = await _db.Pizzas.ToListAsync();
-    return pizzas;
+    return Ok(pizzas);
   }
 
   [Route("{id}")]
   [HttpGet]
-  public async Task<Pizza> Get(int id) {
-    var pizza = await _db.Pizzas.FindAsync(id) ?? throw new Exception("Record Not found");
-    return pizza;
+  public async Task<ActionResult<Pizza>> Get(int id) {
+    var pizza = await _db.Pizzas.FindAsync(id);
+    if (pizza == null) return NotFound();
+    return Ok(pizza);
   }
 
   [HttpPost]
-  public async Task<Pizza> Create([FromBody] Pizza pizzaReq) {
+  public async Task<ActionResult<Pizza>> Create([FromBody] Pizza pizzaReq) {
     var pizza = new Pizza {
       Name = pizzaReq.Name,
       Description = pizzaReq.Description,
@@ -33,27 +34,29 @@ public class PizzasController(AppDbContext db) : ControllerBase {
     };
     await _db.Pizzas.AddAsync(pizza);
     await _db.SaveChangesAsync();
-    return pizza;
+    return Ok(pizza);
   }
 
   [Route("{id}")]
   [HttpPut]
-  public async Task<Pizza> Create([FromBody] Pizza pizzaReq, int id) {
-    var pizza = await _db.Pizzas.FindAsync(id) ?? throw new Exception("Record Not found");
+  public async Task<ActionResult<Pizza>> Update([FromBody] Pizza pizzaReq, int id) {
+    var pizza = await _db.Pizzas.FindAsync(id);
+    if (pizza == null) return NotFound();
     pizza.Name = pizzaReq.Name;
     pizza.Description = pizzaReq.Description;
     pizza.Image = pizzaReq.Image;
     pizza.Price = pizzaReq.Price;
     await _db.SaveChangesAsync();
-    return pizza;
+    return Ok(pizza);
   }
 
   [Route("{id}")]
   [HttpDelete]
-  public async Task<Pizza> Delete(int id) {
-    var pizza = await _db.Pizzas.FindAsync(id) ?? throw new Exception("Record Not found");
+  public async Task<ActionResult<Pizza>> Delete(int id) {
+    var pizza = await _db.Pizzas.FindAsync(id);
+    if (pizza == null) return NotFound();
     _db.Pizzas.Remove(pizza);
     await _db.SaveChangesAsync();
-    return pizza;
+    return Ok(pizza);
   }
 }
