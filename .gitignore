@@ -1,0 +1,54 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+.benchmarkDotNet/
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+*.iml
+
+# Others
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+*.ncrunchsolution
+*.ncrunchproject
+*.ncrunchhost
+*.ncrunchenvironment
+
+# Test results
+[Tt]est[Rr]esult*/
+*.VisualState.xml
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/ and packages.config
+!**/[Pp]ackages/bui**
