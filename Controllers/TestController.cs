@@ -4,11 +4,9 @@ namespace pizza.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TestController : ControllerBase
-{
+public class TestController : ControllerBase {
   [HttpGet]
-  public string Get()
-  {
+  public string Get() {
     return "Hello";
   }
 }
