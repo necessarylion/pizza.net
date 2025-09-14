@@ -1,42 +1,14 @@
-using System.Reflection;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.EntityFrameworkCore;
-using pizza.Data;
+using pizza;
+using pizza.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-// Add DbContext with MySQL
-builder.Services.AddDbContext<AppDbContext>(options => {
-  options.UseMySql(
-      builder.Configuration.GetConnectionString("MysqlConnection"),
-      ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MysqlConnection"))
-  );
-}
-);
-
-// Add services to the container.
-
-builder.Services.AddControllers(options => {
-  options.Conventions.Add(new RouteTokenTransformerConvention(
-      new SnakeCaseParameterTransformer()
-  ));
-}).AddJsonOptions(options => {
-  options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-});
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
-  c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
-    Title = "Pizza API",
-    Version = "v1",
-  });
-  var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-  c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-});
+Validators.Setup(builder);
+Startup.SetupDatabase(builder);
+Startup.SetupController(builder);
+Startup.SetupSwagger(builder);
 
 var app = builder.Build();
+Startup.RunMigration(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
@@ -44,16 +16,9 @@ if (app.Environment.IsDevelopment()) {
   app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "Hello World!");
-
+app.MapGet("/", () => "Pizza");
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
-using var scope = app.Services.CreateScope();
-var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-db.Database.Migrate();
 
 app.Run();

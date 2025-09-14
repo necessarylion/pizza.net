@@ -3,11 +3,8 @@ using pizza.Models;
 
 namespace pizza.Data;
 
-public class AppDbContext : DbContext {
-  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options) {
 
   // Example table
   public DbSet<Pizza> Pizzas { get; set; }
 }
-
-
